@@ -51,7 +51,8 @@ class Meili:
         count = 0
         async for items in data:
             task = await self.add_data(sync, items)
-            tasks.append(task)
+            if task is not None:
+                tasks.append(task)
             count += len(items)
         wait_tasks = [
             self.client.wait_for_task(
