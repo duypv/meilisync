@@ -1,0 +1,30 @@
+debug: true
+plugins:
+  - meilisync.plugin.Plugin
+progress:
+  type: file
+source:
+  type: mysql
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: '123456'
+  database: test
+typesense:
+  host: 127.0.0.1
+  port: 8108
+  protocol: http
+  api_key: xyz
+  connection_timeout_seconds: 10
+  insert_size: 1000
+  insert_interval: 10
+sync:
+  - table: test
+    index: test
+    full: true
+    fields:
+      id:
+      age:
+sentry:
+  dsn: ''
+  environment: 'production'
