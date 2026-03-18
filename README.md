@@ -8,7 +8,7 @@
 
 ## Introduction
 
-Realtime sync data from MySQL/PostgreSQL/MongoDB to Meilisearch.
+Realtime sync data from MySQL/PostgreSQL/MongoDB to Meilisearch or Typesense.
 
 There is also a web admin dashboard for meilisync [meilisync-admin](https://github.com/long2ice/meilisync-admin).
 
@@ -19,6 +19,7 @@ Install from pypi:
 - `pip install meilisync[mysql]` for MySQL.
 - `pip install meilisync[postgres]` for PostgreSQL.
 - `pip install meilisync[mongo]` for MongoDB.
+- `pip install meilisync[typesense]` for Typesense destination.
 - `pip install meilisync[all]` for all.
 - `pip install meilisync[redis]` for redis progress.
 
@@ -68,7 +69,7 @@ directory.
 
 ### Start sync
 
-Start sync data from MySQL to Meilisearch:
+Start sync data from MySQL to Meilisearch (or Typesense if configured):
 
 ```shell
 ❯ meilisync start
@@ -116,6 +117,14 @@ meilisearch:
   api_key:
   insert_size: 1000
   insert_interval: 10
+# typesense:
+#   host: 127.0.0.1
+#   port: 8108
+#   protocol: http
+#   api_key: xyz
+#   connection_timeout_seconds: 10
+#   insert_size: 1000
+#   insert_interval: 10
 sync:
   - table: collection
     index: beauty-collections
@@ -138,6 +147,8 @@ sentry:
   dsn: ""
   environment: "production"
 ```
+
+Configure only one destination section: `meilisearch` or `typesense`.
 
 ### debug (optional)
 
@@ -188,12 +199,26 @@ Source database configuration, currently only support MySQL and PostgreSQL and M
 
 ### meilisearch
 
-Meilisearch configuration.
+Meilisearch destination configuration.
 
 - `api_url`: the Meilisearch API URL.
 - `api_key`: the Meilisearch API key.
 - `insert_size`: insert after collecting this many documents, optional.
 - `insert_interval`: insert after this many seconds have passed, optional.
+
+### typesense
+
+Typesense destination configuration.
+
+- `host`: Typesense server host.
+- `port`: Typesense server port, default is `8108`.
+- `protocol`: `http` or `https`, default is `http`.
+- `api_key`: Typesense API key.
+- `connection_timeout_seconds`: request timeout for Typesense client, default is `10`.
+- `insert_size`: insert after collecting this many documents, optional.
+- `insert_interval`: insert after this many seconds have passed, optional.
+
+Only one destination can be configured at a time: `meilisearch` or `typesense`.
 
 If nether `insert_size` nor `insert_interval` is set, it will insert each document immediately.
 

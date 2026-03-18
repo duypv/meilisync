@@ -15,6 +15,14 @@ meilisearch:
   api_key:
   insert_size: 1000
   insert_interval: 10
+# typesense:
+#   host: 127.0.0.1
+#   port: 8108
+#   protocol: http
+#   api_key: xyz
+#   connection_timeout_seconds: 10
+#   insert_size: 1000
+#   insert_interval: 10
 sync:
   - table: test
     index: test

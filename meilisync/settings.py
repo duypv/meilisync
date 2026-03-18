@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel, Extra
+from pydantic import BaseModel, Extra, model_validator
 from pydantic_settings import BaseSettings
 
 from meilisync.enums import ProgressType, SourceType
@@ -18,6 +18,16 @@ class Source(BaseModel):
 class MeiliSearch(BaseModel):
     api_url: str
     api_key: str | None = None
+    insert_size: int | None = None
+    insert_interval: int | None = None
+
+
+class TypeSense(BaseModel):
+    host: str
+    api_key: str
+    port: int = 8108
+    protocol: str = "http"
+    connection_timeout_seconds: int = 10
     insert_size: int | None = None
     insert_interval: int | None = None
 
@@ -67,9 +77,28 @@ class Settings(BaseSettings, BasePlugin):
     progress: Progress
     debug: bool = False
     source: Source
-    meilisearch: MeiliSearch
+    meilisearch: MeiliSearch | None = None
+    typesense: TypeSense | None = None
     sync: List[Sync]
     sentry: Sentry | None = None
+
+    @model_validator(mode="after")
+    def validate_destination(self):
+        has_meilisearch = self.meilisearch is not None
+        has_typesense = self.typesense is not None
+        if has_meilisearch and has_typesense:
+            raise ValueError("Only one destination can be configured: meilisearch or typesense")
+        if not has_meilisearch and not has_typesense:
+            raise ValueError("A destination must be configured: meilisearch or typesense")
+        return self
+
+    @property
+    def destination(self):
+        return "meilisearch" if self.meilisearch else "typesense"
+
+    @property
+    def destination_settings(self):
+        return self.meilisearch or self.typesense
 
     @property
     def tables(self):

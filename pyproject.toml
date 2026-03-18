@@ -1,9 +1,9 @@
 [tool.poetry]
 authors = ["long2ice <long2ice@gmail.com>"]
-description = "Realtime sync data from MySQL/PostgreSQL/MongoDB to meilisearch"
+description = "Realtime sync data from MySQL/PostgreSQL/MongoDB to Meilisearch or Typesense"
 documentation = "https://github.com/meilisync/meilisync"
 include = ["CHANGELOG.md", "LICENSE", "README.md"]
-keywords = ["meilisearch", "postgres", "mysql", "mongodb", "sync"]
+keywords = ["meilisearch", "typesense", "postgres", "mysql", "mongodb", "sync"]
 license = "Apache-2.0"
 name = "meilisync"
 packages = [{ include = "meilisync" }]
@@ -24,6 +24,7 @@ redis = "*"
 sentry-sdk = "*"
 typer = { version = "*", extras = ["all"] }
 pydantic-settings = "*"
+typesense = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 mypy = "*"
@@ -36,12 +37,13 @@ types-pyyaml = "*"
 types-redis = "*"
 
 [tool.poetry.extras]
-all = ["asyncmy", "redis", "psycopg2-binary", "motor", "sentry-sdk"]
+all = ["asyncmy", "redis", "psycopg2-binary", "motor", "sentry-sdk", "typesense"]
 mongodb = ["motor"]
 mysql = ["asyncmy"]
 postgres = ["psycopg2-binary"]
 redis = ["redis"]
 sentry = ["sentry-sdk"]
+typesense = ["typesense"]
 
 [tool.poetry.scripts]
 meilisync = "meilisync.main:app"
